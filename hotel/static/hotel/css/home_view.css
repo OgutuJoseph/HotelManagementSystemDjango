@@ -28,13 +28,8 @@ body {
 	justify-content: space-evenly;
 }
 
-/*Sub Divs*/
-.home {
-    flex: 0.2;
-}
-
-/*Meal Divs*/
-.meal {
+/*Room Divs*/
+.room {
 	max-width:20%;
 	min-width:200px;
 	text-align:center;
@@ -45,11 +40,11 @@ body {
 	flex:1;
 }
 
-.meal:hover{
+.room:hover{
 	background-color: #353535;
 }
 
-/*Inside meal divs*/
+/*Inside room divs*/
 h2 {
 	margin: 0.25rem;
 }

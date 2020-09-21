@@ -7,6 +7,9 @@ from hotel.booking_functions.availability import check_availability
 
 # Create your views here.
 
+def HomeView(request):
+    return render(request, 'home_view.html')
+
 def RoomListView(request):
     room = Room.objects.all()[0]
     room_categories = dict(room.ROOM_CATEGORIES)

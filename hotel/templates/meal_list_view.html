@@ -12,7 +12,12 @@
 		<!-- brand -->
 		<h1 id="brand">Meals</h1>
 		<p style="text-align: right;">Logged in as {{ self }}</p>
-
+		<br>
+		<div class="home">
+			<a href="{% url 'hotel:HomeView' %}"><i class="fas fa-arrow-alt-circle-left">Home</i></a>
+	   </div>
+	   <h2><a href="{% url 'hotel:MealSelectionList' %}">View Selected Meals</a></h2>
+	   
 		<!-- main content -->
 		<div class="content">
 			{% for meal_category, meal_url in meal_list %} 

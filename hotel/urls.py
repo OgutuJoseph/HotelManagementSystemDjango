@@ -1,9 +1,11 @@
 from django.urls import path
-from .views import RoomListView, BookingListView, MealListView, MealSelectionList, ServiceListView, ServiceSelectionList, RoomDetailView, MealDetailView, ServiceDetailView, CancelBookingView
+from .views import HomeView, RoomListView, BookingListView, MealListView, MealSelectionList, ServiceListView, ServiceSelectionList, RoomDetailView, MealDetailView, ServiceDetailView, CancelBookingView
 
 app_name='hotel'
 
 urlpatterns=[
+    path('home', HomeView, name='HomeView'),
+
     path('room_list/', RoomListView, name='RoomListView'),
     path('booking_list/', BookingListView.as_view(), name='BookingListView'),
     path('meal_list/', MealListView, name='MealListView'),
