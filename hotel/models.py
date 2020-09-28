@@ -68,7 +68,7 @@ class Booking(models.Model):
 class MealSelection(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     meal = models.ForeignKey(Meal, on_delete=models.CASCADE)
-    meal_date = models.DateTimeField() 
+    meal_date = models.DateTimeField()  
 
     def __str__(self):
         return f'{self.user} has selected {self.meal}; On {self.meal_date}.'  
@@ -90,3 +90,14 @@ class ServiceSelection(models.Model):
         service_categories = dict(self.service.SERVICE_CATEGORIES)
         service_category = service_categories.get(self.service.service_type)
         return service_category
+
+# class Bill(models.Model):
+#     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+#     bill_date = models.DateField() 
+#     mealselection = models.ForeignKey(MealSelection, on_delete=models.CASCADE, default=0)
+#     serviceselection = models.ForeignKey(ServiceSelection, on_delete=models.CASCADE, default=0)
+#     booking = models.ForeignKey(Booking, on_delete=models.CASCADE, default=0)
+#     bill_date = models.DateField() 
+
+#     def __str__(self):
+#         return f'Bill for: {self.user} on {self.bill_date}.' 
