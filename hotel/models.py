@@ -29,10 +29,10 @@ class Meal(models.Model):
     )
     meal_type = models.CharField(max_length=3, choices=MEAL_CATEGORIES)
     meal_name = models.CharField(max_length=20) 
-    price = models.IntegerField() 
+    meal_charge = models.IntegerField() 
 
     def __str__(self):
-        return f'{self.meal_name}. {self.meal_type} for {self.price} shillings'
+        return f'{self.meal_name}. {self.meal_type} for {self.meal_charge} shillings'
 
 class Service(models.Model): 
     SERVICE_CATEGORIES=(
