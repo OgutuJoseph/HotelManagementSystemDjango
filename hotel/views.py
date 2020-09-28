@@ -168,12 +168,12 @@ class MealDetailView(View):
             return HttpResponse('No Meals Of This Category.')
 
     def post(self, request, *args, **kwargs): 
-        date=request.POST.get("date")
+        meal_date=request.POST.get("meal_date")
         meal_id=request.POST.get("meal_id")
         meal_id=Meal.objects.get(id=meal_id)
         user = self.request.user.id
 
-        mealselection=MealSelection(date=date,meal_id=meal_id.id,user_id=user)
+        mealselection=MealSelection(meal_date=meal_date,meal_id=meal_id.id,user_id=user)
         mealselection.save()
         return HttpResponse(mealselection)
 

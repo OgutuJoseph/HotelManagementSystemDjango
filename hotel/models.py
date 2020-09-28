@@ -68,10 +68,10 @@ class Booking(models.Model):
 class MealSelection(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     meal = models.ForeignKey(Meal, on_delete=models.CASCADE)
-    date = models.DateTimeField() 
+    meal_date = models.DateTimeField() 
 
     def __str__(self):
-        return f'{self.user} has selected {self.meal}; On {self.date}.'  
+        return f'{self.user} has selected {self.meal}; On {self.meal_date}.'  
     
     def get_meal_category(self):
         meal_categories = dict(self.meal.MEAL_CATEGORIES)
