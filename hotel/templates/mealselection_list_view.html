@@ -20,7 +20,7 @@
                 <div class="home">
                     <!--Div 1: Back to home-->
                     <div class="home">
-                        <a href="{% url 'hotel:MealListView' %}"><i class="fas fa-arrow-alt-circle-left">Back</i></a>
+                        <a href="{% url 'MealListView' %}"><i class="fas fa-arrow-alt-circle-left">Back</i></a>
                     </div>
                 </div>
             </div>
@@ -36,7 +36,7 @@
                         <h3>Name: {{ mealselection.meal.meal_name }} </h3>
                     </div>
                     <div class="from">
-                        <h3>Price: {{ mealselection.meal.meal_charge }} KES/- </h3>
+                        <h3>Price: {{ mealselection.mealcharge.meal_charge }} KES/- </h3>
                     </div>
                     <div class="to">
                         <h3>Date: {{ mealselection.meal_date }} </h3>

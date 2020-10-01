@@ -20,7 +20,7 @@
                 <div class="home">
                     <!--Div 1: Back to home-->
                     <div class="home">
-                        <a href="{% url 'hotel:ServiceListView' %}"><i class="fas fa-arrow-alt-circle-left">Back</i></a>
+                        <a href="{% url 'ServiceListView' %}"><i class="fas fa-arrow-alt-circle-left">Back</i></a>
                     </div>
                 </div>
             </div>
@@ -39,7 +39,7 @@
                         <h3>Date: {{ serviceselection.service_date }} </h3>
                     </div> 
                     <div class="to">
-                        <h3>Charge: {{ serviceselection.service.service_charge }} KES/- </h3>
+                        <h3>Charge: {{ serviceselection.servicecharge.service_charge }} KES/- </h3>
                     </div> 
                     <div class="cancel">
                         <a href="#" class="invisible"><i class="far fa-2x fa-times-circle">Cancel Service</i></a>

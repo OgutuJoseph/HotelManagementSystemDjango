@@ -1,8 +1,8 @@
 from django.shortcuts import render, HttpResponse
 from django.views.generic import ListView, FormView, View, DeleteView
 from django.urls import reverse, reverse_lazy
-from .models import Room, Booking, Meal, MealSelection, Service, ServiceSelection
-from .forms import AvailabilityForm
+from .models import Room, Booking, Meal, MealSelection, Service, ServiceSelection, MealCharge, ServiceCharge
+from .forms import AvailabilityForm, MealSelectionForm, ServiceSelectionForm
 from hotel.booking_functions.availability import check_availability
 
 # Create your views here.
@@ -19,7 +19,7 @@ def RoomListView(request):
 
     for room_category in room_categories:
         room = room_categories.get(room_category)
-        room_url = reverse('hotel:RoomDetailView', kwargs={'category':room_category})
+        room_url = reverse('RoomDetailView', kwargs={'category':room_category})
     
         room_list.append((room, room_url)) 
     context = {
@@ -49,7 +49,7 @@ def MealListView(request):
 
     for meal_category in meal_categories:
         meal = meal_categories.get(meal_category)
-        meal_url = reverse('hotel:MealDetailView', kwargs={'meal_type':meal_category})
+        meal_url = reverse('MealDetailView', kwargs={'meal_type':meal_category})
     
         meal_list.append((meal, meal_url)) 
     context = {
@@ -79,7 +79,7 @@ def ServiceListView(request):
 
     for service_category in service_categories:
         service = service_categories.get(service_category)
-        service_url = reverse('hotel:ServiceDetailView', kwargs={'service_type':service_category})
+        service_url = reverse('ServiceDetailView', kwargs={'service_type':service_category})
     
         service_list.append((service, service_url)) 
     context = {
@@ -153,7 +153,8 @@ class MealDetailView(View):
         
         meal_type = self.kwargs.get('meal_type',None)
         meal_list = Meal.objects.filter(meal_type=meal_type)
-        
+        mealselectionform = MealSelectionForm()
+         
         if len(meal_list)>0:
             meal = meal_list[0]
             meals = Meal.objects.filter(meal_type=meal_type)
@@ -161,7 +162,8 @@ class MealDetailView(View):
             context = {
                 'meal_category' : meal_category,
                 'meals' : meals,
-                'self' : request.user
+                'self' : request.user,
+                'mealselectionform' : mealselectionform,
             }
             return render(request, 'meal_detail_view.html', context)
         else:
@@ -169,18 +171,24 @@ class MealDetailView(View):
 
     def post(self, request, *args, **kwargs): 
         meal_date=request.POST.get("meal_date")
-        meal_id=request.POST.get("meal_id")
-        meal_id=Meal.objects.get(id=meal_id)
+        meal_id=request.POST.get("meal")
+        mealcharge_id=request.POST.get("mealcharge") 
         user = self.request.user.id
 
-        mealselection=MealSelection(meal_date=meal_date,meal_id=meal_id.id,user_id=user)
+        mealselection=MealSelection(meal_date=meal_date,meal_id=meal_id,mealcharge_id=mealcharge_id,user_id=user)
         mealselection.save()
         return HttpResponse(mealselection)
+
+def load_mealcharges(request):
+    meal_id = request.GET.get('meal')
+    mealcharges = MealCharge.objects.filter(meal_id=meal_id)
+    return render(request, 'mealcharge_dropdown_list_options.html', {'mealcharges': mealcharges})
 
 class ServiceDetailView(View):
     def get(self, request, *args, **kwargs):
         service_type = self.kwargs.get('service_type',None)
         service_list = Service.objects.filter(service_type=service_type)
+        serviceselectionform = ServiceSelectionForm()
         
         if len(service_list)>0:
             service = service_list[0]
@@ -189,7 +197,8 @@ class ServiceDetailView(View):
             context = {
                 'service_category' : service_category,
                 'services' : services,
-                'self' : request.user
+                'self' : request.user,
+                'serviceselectionform' : serviceselectionform,
             }
             return render(request, 'service_detail_view.html', context)
         else:
@@ -197,13 +206,18 @@ class ServiceDetailView(View):
 
     def post(self, request, *args, **kwargs):
         service_date=request.POST.get("service_date")
-        service_id=request.POST.get("service_id")
-        service_id=Meal.objects.get(id=service_id)
+        service_id=request.POST.get("service")
+        servicecharge_id=request.POST.get("servicecharge") 
         user = self.request.user.id
 
-        serviceselection=ServiceSelection(service_date=service_date,service_id=service_id.id,user_id=user)
+        serviceselection=ServiceSelection(service_date=service_date,service_id=service_id,servicecharge_id=servicecharge_id,user_id=user)
         serviceselection.save()
         return HttpResponse(serviceselection)
+
+def load_servicecharges(request):
+    service_id = request.GET.get('service')
+    servicecharges = ServiceCharge.objects.filter(service_id=service_id)
+    return render(request, 'servicecharge_dropdown_list_options.html', {'servicecharges': servicecharges})
 
 
 ##########################################
@@ -211,4 +225,4 @@ class ServiceDetailView(View):
 class CancelBookingView(DeleteView):
     model = Booking
     template_name = 'booking_cancel_view.html'
-    success_url = reverse_lazy('hotel:BookingListView')
+    success_url = reverse_lazy('BookingListView')

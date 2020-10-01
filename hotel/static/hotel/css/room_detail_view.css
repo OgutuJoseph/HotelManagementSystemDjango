@@ -67,7 +67,7 @@ i {
     margin: 1rem;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: space-between; 
 }
 
 input, button{

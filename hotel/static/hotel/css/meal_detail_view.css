@@ -68,6 +68,7 @@ i {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    height:20px;
 }
 
 input, button{
@@ -76,13 +77,15 @@ input, button{
 	border-radius:0.5rem;
 	line-height:1.5;
 	font-size:1.5rem;
-	color:#555;
+    color:#555;
+    height:20px;
 }
 
 button {
     background-color: #dfdfdf;
     color: rgb(6, 137, 245);
     outline: none;
+    height:20px;
 }
 
 button:hover{

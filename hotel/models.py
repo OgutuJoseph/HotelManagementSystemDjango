@@ -28,11 +28,10 @@ class Meal(models.Model):
         ('SUP', 'Supper'), 
     )
     meal_type = models.CharField(max_length=3, choices=MEAL_CATEGORIES)
-    meal_name = models.CharField(max_length=20) 
-    meal_charge = models.IntegerField() 
+    meal_name = models.CharField(max_length=20)  
 
     def __str__(self):
-        return f'{self.meal_name}. {self.meal_type} for {self.meal_charge} shillings'
+        return f'{self.meal_type}: {self.meal_name}'
 
 class Service(models.Model): 
     SERVICE_CATEGORIES=(
@@ -40,11 +39,27 @@ class Service(models.Model):
         ('LAUN', 'Laundry'), 
     )
     service_type = models.CharField(max_length=4, choices=SERVICE_CATEGORIES)
-    service_name = models.CharField(max_length=20)
-    service_charge = models.IntegerField() 
+    service_name = models.CharField(max_length=20) 
 
     def __str__(self):
-        return f'{self.service_name} for {self.service_charge} shillings'
+        return f'{self.service_type}: {self.service_name}'
+
+########################################################################################
+
+class MealCharge(models.Model):
+    meal = models.ForeignKey(Meal, on_delete=models.CASCADE)
+    meal_charge = models.CharField(max_length=30)
+ 
+    def __str__(self):
+        return f'{self.meal.meal_name} for {self.meal_charge}'
+
+class ServiceCharge(models.Model):
+    service = models.ForeignKey(Service, on_delete=models.CASCADE)
+    service_charge = models.CharField(max_length=30)
+ 
+    def __str__(self):
+        return f'{self.service.service_name} for {self.service_charge}'
+   
 
 ########################################################################################
 
@@ -68,7 +83,8 @@ class Booking(models.Model):
 class MealSelection(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     meal = models.ForeignKey(Meal, on_delete=models.CASCADE)
-    meal_date = models.DateTimeField()  
+    mealcharge = models.ForeignKey(MealCharge, on_delete=models.CASCADE) 
+    meal_date = models.DateField()  
 
     def __str__(self):
         return f'{self.user} has selected {self.meal}; On {self.meal_date}.'  
@@ -81,6 +97,7 @@ class MealSelection(models.Model):
 class ServiceSelection(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     service = models.ForeignKey(Service, on_delete=models.CASCADE)
+    servicecharge = models.ForeignKey(ServiceCharge, on_delete=models.CASCADE)
     service_date = models.DateField() 
 
     def __str__(self):
@@ -90,14 +107,4 @@ class ServiceSelection(models.Model):
         service_categories = dict(self.service.SERVICE_CATEGORIES)
         service_category = service_categories.get(self.service.service_type)
         return service_category
-
-# class Bill(models.Model):
-#     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-#     bill_date = models.DateField() 
-#     mealselection = models.ForeignKey(MealSelection, on_delete=models.CASCADE, default=0)
-#     serviceselection = models.ForeignKey(ServiceSelection, on_delete=models.CASCADE, default=0)
-#     booking = models.ForeignKey(Booking, on_delete=models.CASCADE, default=0)
-#     bill_date = models.DateField() 
-
-#     def __str__(self):
-#         return f'Bill for: {self.user} on {self.bill_date}.' 
+  

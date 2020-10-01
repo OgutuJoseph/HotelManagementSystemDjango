@@ -16,7 +16,7 @@
             
             <!--Rom Image-->
             <div class="image">
-                <img src="https://images.unsplash.com/photo-1580842402762-6f5868c17412?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60">
+                <img src="https://images.unsplash.com/photo-1580842402762-6f5868c17412?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60" width="500" height="600">
             </div>
 
             <!--Service Details-->
@@ -24,7 +24,7 @@
 
                 <!--Div 1 Back to Home-->
                 <div class="home">
-                     <a href="{% url 'hotel:ServiceListView' %}"><i class="fas fa-arrow-alt-circle-left">Back</i></a>
+                     <a href="{% url 'ServiceListView' %}"><i class="fas fa-arrow-alt-circle-left">Back</i></a>
                 </div>
 
                 <!--Div 2 Service Information-->
@@ -34,27 +34,34 @@
                 </div>
 
                 <!--Div 3 Service Selection Form-->
-                <form id="booking-form" action="" method="POST">
-                    {% csrf_token %}
-                    <!--Input Div-->
-                    <div class="input-div">
-                        <label for="service">Service</label>
-                        <select name="service_id" style=" height:50px;">
-                            {% for service in services %}
-                                <option value="{{ service.id }}">{{ service.service_name }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div class="input-div">
-                        <label for="check_in">Date : </label>
-                        <input type="date" id="service_date" name="service_date">
-                    </div> 
+                <form method="post" id="serviceselectionForm" data-servicecharges-url="{% url 'ajax_load_servicecharges' %}" novalidate>
+                    {% csrf_token %} 
+                    
+                    {{ serviceselectionform }}
                     <!--Input Div-->
                     <div class="input-div"> 
                         <button type="submit">Select Service</button>
                     </div>
                 </form>
             </div>
-		</div>  
+        </div> 
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+        <script>
+            $("#id_service").change(function () {
+                var url = $("#serviceselectionForm").attr("data-servicecharges-url");
+                var serviceId = $(this).val();
+ 
+                $.ajax({
+                    url: url,
+                    data: {
+                        'service': serviceId
+                    },
+                    success: function (data) {
+                    $("#id_servicecharge").html(data);
+                }
+                });
+ 
+            });
+        </script> 
 	</body>
 </html>
