@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Room, Meal, Service, Booking, MealSelection, ServiceSelection, MealCharge, ServiceCharge
+from .models import Room, Meal, Service, Booking, MealSelection, ServiceSelection, MealCharge, ServiceCharge, Payment
 
 # Register your models here.
 admin.site.register(Room)
@@ -10,4 +10,5 @@ admin.site.register(MealSelection)
 admin.site.register(ServiceSelection)
 admin.site.register(MealCharge)
 admin.site.register(ServiceCharge)
+admin.site.register(Payment)
 # admin.site.register(Bill)

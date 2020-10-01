@@ -17,14 +17,16 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from hotel import views
+from hotel import views, AccountViews
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     # path('',include('hotel.urls')),
     path('accounts/', include('allauth.urls')), 
-
     path('home', views.HomeView, name='HomeView'),
+
+    path('', AccountViews.MainView, name='MainView'),
+    path('accounts/profile/', AccountViews.ProfileView, name='ProfileView'),
 
     path('room_list/', views.RoomListView, name='RoomListView'),
     path('booking_list/', views.BookingListView.as_view(), name='BookingListView'),
@@ -39,6 +41,9 @@ urlpatterns = [
     path('service/<service_type>', views.ServiceDetailView.as_view(), name='ServiceDetailView'),
 
     path('booking/cancel/<pk>', views.CancelBookingView.as_view(), name='CancelBookingView'),
+
+    path('payment_add/', views.PaymentCreateView.as_view(), name='PaymentCreateView'),  
+    path('payment_list', views.PaymentListView.as_view(), name='PaymentListView'),    
 
     path('ajax/load-mealcharges/', views.load_mealcharges, name='ajax_load_mealcharges'),
     path('ajax/load-servicecharges/', views.load_servicecharges, name='ajax_load_servicecharges'),

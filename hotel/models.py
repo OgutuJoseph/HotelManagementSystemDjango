@@ -78,7 +78,7 @@ class Booking(models.Model):
         return room_category
     
     def get_cancel_booking_url(self):
-        return reverse_lazy('hotel:CancelBookingView', args={self.pk, })
+        return reverse_lazy('CancelBookingView', args={self.pk, })
 
 class MealSelection(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -107,4 +107,22 @@ class ServiceSelection(models.Model):
         service_categories = dict(self.service.SERVICE_CATEGORIES)
         service_category = service_categories.get(self.service.service_type)
         return service_category
+
+########################################################################################
+
+class Payment(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    meal = models.ForeignKey(Meal, on_delete=models.SET_NULL, null=True, blank=True, default='')
+    mealcharge = models.ForeignKey(MealCharge, on_delete=models.SET_NULL, null=True, blank=True, default='')
+    service = models.ForeignKey(Service, on_delete=models.SET_NULL, null=True, blank=True, default='')
+    servicecharge = models.ForeignKey(ServiceCharge, on_delete=models.SET_NULL, null=True, blank=True, default='')
+    payment_date = models.DateField() 
+
+    def __str__(self):
+        return f'Payment By: {self.user} on: {self.payment_date}.'  
+
+    # def get_service_category(self):
+    #     service_categories = dict(self.service.SERVICE_CATEGORIES)
+    #     service_category = service_categories.get(self.service.service_type)
+    #     return service_category
   

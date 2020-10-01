@@ -1,8 +1,8 @@
-from django.shortcuts import render, HttpResponse
-from django.views.generic import ListView, FormView, View, DeleteView
+from django.shortcuts import render, HttpResponse, HttpResponseRedirect
+from django.views.generic import ListView, FormView, View, DeleteView, CreateView
 from django.urls import reverse, reverse_lazy
-from .models import Room, Booking, Meal, MealSelection, Service, ServiceSelection, MealCharge, ServiceCharge
-from .forms import AvailabilityForm, MealSelectionForm, ServiceSelectionForm
+from .models import Room, Booking, Meal, MealSelection, Service, ServiceSelection, MealCharge, ServiceCharge, Payment
+from .forms import AvailabilityForm, MealSelectionForm, ServiceSelectionForm, PaymentForm
 from hotel.booking_functions.availability import check_availability
 
 # Create your views here.
@@ -142,7 +142,8 @@ class RoomDetailView(View):
                     check_out = data['check_out']
                 )
                 booking.save()
-                return HttpResponse(booking)
+                # return HttpResponse(booking)
+                return HttpResponseRedirect(reverse("BookingListView"))
             else:
                 return HttpResponse('Room Is Not Available From Selected Date. Try Another One.')
 
@@ -177,7 +178,8 @@ class MealDetailView(View):
 
         mealselection=MealSelection(meal_date=meal_date,meal_id=meal_id,mealcharge_id=mealcharge_id,user_id=user)
         mealselection.save()
-        return HttpResponse(mealselection)
+        # return HttpResponse(mealselection)
+        return HttpResponseRedirect(reverse("MealSelectionList"))
 
 def load_mealcharges(request):
     meal_id = request.GET.get('meal')
@@ -212,7 +214,8 @@ class ServiceDetailView(View):
 
         serviceselection=ServiceSelection(service_date=service_date,service_id=service_id,servicecharge_id=servicecharge_id,user_id=user)
         serviceselection.save()
-        return HttpResponse(serviceselection)
+        # return HttpResponse(serviceselection)
+        return HttpResponseRedirect(reverse("ServiceSelectionList"))
 
 def load_servicecharges(request):
     service_id = request.GET.get('service')
@@ -220,6 +223,47 @@ def load_servicecharges(request):
     return render(request, 'servicecharge_dropdown_list_options.html', {'servicecharges': servicecharges})
 
 
+##########################################
+
+class PaymentCreateView(View):  
+    def get(self, request, *args, **kwargs):  
+        paymentform = PaymentForm()
+          
+        context = {
+            'self' : request.user,
+            'paymentform' : paymentform, 
+        }
+        return render(request, 'payment_view.html', context)
+    
+    def post(self, request, *args, **kwargs): 
+        payment_date=request.POST.get("payment_date")
+        meal_id=request.POST.get("meal")
+        mealcharge_id=request.POST.get("mealcharge") 
+        service_id=request.POST.get("service")
+        servicecharge_id=request.POST.get("servicecharge") 
+        user = self.request.user.id
+
+        payment=Payment(payment_date=payment_date,meal_id=meal_id,mealcharge_id=mealcharge_id,service_id=service_id,servicecharge_id=servicecharge_id,user_id=user)
+        payment.save()
+        # return HttpResponse(payment)
+        return HttpResponseRedirect(reverse("PaymentListView"))
+
+class PaymentListView(ListView):
+    # model = Payment
+    # context_object_name = 'payments'
+    # template_name = 'payment_list.html'
+
+    model = Payment
+    template_name="payment_list.html"
+
+    def get_queryset(self, *args, **kwargs):
+        if self.request.user.is_staff:
+            payment_list = Payment.objects.all()
+            return payment_list
+        else:
+            payment_list = Payment.objects.filter(user=self.request.user)
+            return payment_list
+ 
 ##########################################
 
 class CancelBookingView(DeleteView):
